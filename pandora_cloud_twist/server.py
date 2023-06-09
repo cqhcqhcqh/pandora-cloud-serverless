@@ -65,7 +65,7 @@ class ChatBot:
         app.route('/auth/login')(self.login)
         app.route('/auth/login', methods=['POST'])(self.login_post)
         app.route('/auth/login_token', methods=['POST'])(self.login_token)
-        app.route('/auth/access_token')(self.access_token_page)
+        app.route('/auth/token')(self.token)
 
         if not self.debug:
             self.logger.warning('Serving on http://{}:{}'.format(host, port))
@@ -75,7 +75,10 @@ class ChatBot:
             serve(app, host=host, port=port, ident=None, threads=threads)
 
         return app
-
+    
+    def redirect_token(self):
+        return redirect(url_for('token'))
+    
     @staticmethod
     def __after_request(resp):
         resp.headers['X-Server'] = 'pandora-cloud/{}'.format(__version__)
@@ -141,7 +144,7 @@ class ChatBot:
         return resp
 
     async def logout(self):
-        resp = redirect(url_for('login'))
+        resp = self.redirect_token()
         self.__set_cookie(resp, '', 0)
 
         return resp
@@ -149,7 +152,7 @@ class ChatBot:
     async def login(self):
         return render_template('login.html', api_prefix=self.api_prefix, next=request.args.get('next', ''))
     
-    async def access_token_page(self):
+    async def token(self):
         return render_template('access_token.html', api_prefix=self.api_prefix, next=request.args.get('next', ''))
 
     async def login_post(self):
@@ -198,7 +201,7 @@ class ChatBot:
     async def chat(self, conversation_id=None):
         err, user_id, email, _, _ = await self.__get_userinfo()
         if err:
-            return redirect(url_for('login'))
+            return self.redirect_token()
 
         query = request.args.to_dict()
         if conversation_id:
