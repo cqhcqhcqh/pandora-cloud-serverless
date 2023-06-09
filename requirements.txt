@@ -1,1 +1,1 @@
-pandora-chatgpt[cloud]
+pandora-chatgpt

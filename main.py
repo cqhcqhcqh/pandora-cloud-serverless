@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from os import getenv
-
-from pandora_cloud.server import ChatBot
+from pandora_cloud_twist.server import ChatBot
 
 _port = getenv('PORT')
 _proxy = getenv('PANDORA_PROXY')
