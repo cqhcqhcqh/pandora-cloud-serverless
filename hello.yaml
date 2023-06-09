@@ -9,7 +9,7 @@ services:
       service:
         name: serverless-devs-application
       function:
-        name: pandora-cloud-serverless-ohyz
+        name: pandora-cloud-serverless-cpk7
         description: Initialize
         runtime: custom
         environmentVariables:
